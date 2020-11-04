@@ -1,0 +1,22 @@
+grammar cl.ejemplo.entidades.Entidades with org.eclipse.xtext.common.Terminals
+
+generate entidades "http://www.ejemplo.cl/entidades/Entidades"
+
+Model: entidades+=Entidad*;
+
+Entidad:
+	
+	'entidad' name = ID ('extends' superTipo=[Entidad])? '{'
+		atributos += Atributo*
+	'}'
+;
+
+Atributo:
+	
+	tipo=TipoAtributo name = ID ';' 
+;
+
+TipoAtributo:
+	
+	entidad=[Entidad] (array?='[' (length=INT)? ']')?
+;

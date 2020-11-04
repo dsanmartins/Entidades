@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: cl.ejemplo.entidades
+Bundle-ManifestVersion: 2
+Bundle-Name: cl.ejemplo.entidades
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: cl.ejemplo.entidades; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib;bundle-version="2.14.0",
+ org.eclipse.xtext.util,
+ org.eclipse.emf.common,
+ org.antlr.runtime;bundle-version="[3.2.0,3.2.1)"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: cl.ejemplo.entidades,
+ cl.ejemplo.entidades.entidades.util,
+ cl.ejemplo.entidades.parser.antlr,
+ cl.ejemplo.entidades.validation,
+ cl.ejemplo.entidades.scoping,
+ cl.ejemplo.entidades.entidades,
+ cl.ejemplo.entidades.services,
+ cl.ejemplo.entidades.entidades.impl,
+ cl.ejemplo.entidades.serializer,
+ cl.ejemplo.entidades.parser.antlr.internal,
+ cl.ejemplo.entidades.generator
+Import-Package: org.apache.log4j
