@@ -8,23 +8,32 @@ import com.google.inject.Inject
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.extensions.InjectionExtension
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.junit.jupiter.api.Assertions
+import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.^extension.ExtendWith
+import cl.ejemplo.entidades.entidades.Entidad
 
 @ExtendWith(InjectionExtension)
 @InjectWith(EntidadesInjectorProvider)
+
 class EntidadesParsingTest {
-	@Inject
-	ParseHelper<Model> parseHelper
 	
+	@Inject extension ParseHelper<Model>
 	@Test
-	def void loadModel() {
-		val result = parseHelper.parse('''
-			Hello Xtext!
-		''')
-		Assertions.assertNotNull(result)
-		val errors = result.eResource.errors
-		Assertions.assertTrue(errors.isEmpty, '''Unexpected errors: «errors.join(", ")»''')
+	def void testModel() {
+		val model = ''' 
+		
+		entidad MiEntidad {
+			
+			MiEntidad atributo;
+		}	
+		'''.parse
+		
+		val entidad = model.entidades.get(0)
+		Assert.assertEquals("MiEntidad", entidad.name)
+		
+		val atributo = entidad.atributos.get(0);
+		Assert.assertEquals("atributo", atributo.name)
+		Assert.assertEquals("MiEntidad", (atributo.tipo.entidad as Entidad).name)
 	}
 }

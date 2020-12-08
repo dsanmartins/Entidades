@@ -3,18 +3,18 @@
  */
 package cl.ejemplo.entidades.tests;
 
+import cl.ejemplo.entidades.entidades.Atributo;
+import cl.ejemplo.entidades.entidades.Entidad;
 import cl.ejemplo.entidades.entidades.Model;
 import cl.ejemplo.entidades.tests.EntidadesInjectorProvider;
 import com.google.inject.Inject;
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.extensions.InjectionExtension;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.xbase.lib.Exceptions;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
-import org.junit.jupiter.api.Assertions;
+import org.eclipse.xtext.xbase.lib.Extension;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -23,23 +23,30 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @SuppressWarnings("all")
 public class EntidadesParsingTest {
   @Inject
-  private ParseHelper<Model> parseHelper;
+  @Extension
+  private ParseHelper<Model> _parseHelper;
   
   @Test
-  public void loadModel() {
+  public void testModel() {
     try {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("Hello Xtext!");
       _builder.newLine();
-      final Model result = this.parseHelper.parse(_builder);
-      Assertions.assertNotNull(result);
-      final EList<Resource.Diagnostic> errors = result.eResource().getErrors();
-      boolean _isEmpty = errors.isEmpty();
-      StringConcatenation _builder_1 = new StringConcatenation();
-      _builder_1.append("Unexpected errors: ");
-      String _join = IterableExtensions.join(errors, ", ");
-      _builder_1.append(_join);
-      Assertions.assertTrue(_isEmpty, _builder_1.toString());
+      _builder.append("entidad MiEntidad {");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("MiEntidad atributo;");
+      _builder.newLine();
+      _builder.append("}\t");
+      _builder.newLine();
+      final Model model = this._parseHelper.parse(_builder);
+      final Entidad entidad = model.getEntidades().get(0);
+      Assert.assertEquals("MiEntidad", entidad.getName());
+      final Atributo atributo = entidad.getAtributos().get(0);
+      Assert.assertEquals("atributo", atributo.getName());
+      Entidad _entidad = atributo.getTipo().getEntidad();
+      Assert.assertEquals("MiEntidad", ((Entidad) _entidad).getName());
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
     }

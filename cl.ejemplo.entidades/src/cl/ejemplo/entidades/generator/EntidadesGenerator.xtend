@@ -17,10 +17,35 @@ import cl.ejemplo.entidades.entidades.Entidad
 class EntidadesGenerator extends AbstractGenerator {
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
-		fsa.generateFile('greetings.txt', 'People to greet: ' + 
-			resource.allContents
-				.filter(Entidad)
-				.map[name]
-				.join(', '))
+		
+		for (e:resource.allContents.toIterable.filter(Entidad)){
+			fsa.generateFile("entidades/"+e.name+".java", e.compile)
+		}
+	}
+	
+	def compile(Entidad entidad){	
+		'''
+		package entidades;
+		
+		public class «entidad.name» «IF entidad.superTipo !== null» extends «entidad.superTipo.name» «ENDIF» {
+		
+			«FOR atributo:entidad.atributos»
+				private «atributo.tipo.entidad.name» «atributo.name»;
+			«ENDFOR»	
+			
+			«FOR atributo:entidad.atributos»
+			
+			public «atributo.tipo.entidad.name» get«atributo.name.toFirstUpper»(){
+					
+				return «atributo.name»;
+			}
+				
+			public void set«atributo.name.toFirstUpper»(«atributo.tipo.entidad.name» _arg){
+									
+				this.«atributo.name» = _arg;
+			}
+			«ENDFOR»	
+		}
+		'''
 	}
 }

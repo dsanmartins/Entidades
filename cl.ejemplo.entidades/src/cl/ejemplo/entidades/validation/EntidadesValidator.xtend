@@ -18,6 +18,7 @@ class EntidadesValidator extends AbstractEntidadesValidator{
 //		}
 //	}
 	
+	public static val CICLO_JERARQUICO ="org.ejemplo.entidades.CicloJerarquico";
 	
 	@Check
 	def checkSinCiclosEnJerarquiaDeEntidad(Entidad entidad) {
@@ -31,8 +32,9 @@ class EntidadesValidator extends AbstractEntidadesValidator{
 		if (entidadesVisitadas.contains(actual)){
 			
 			
-			error("Ciclo en la jerarquia de la entidad '" + actual.name + "'",
-				EntidadesPackage.eINSTANCE.entidad_SuperTipo)
+			error("Ciclo Jerarquico en la entidad '" + actual.name + "'",
+				EntidadesPackage.eINSTANCE.entidad_SuperTipo, CICLO_JERARQUICO,
+				actual.superTipo.name)
 				return
 		}
 	

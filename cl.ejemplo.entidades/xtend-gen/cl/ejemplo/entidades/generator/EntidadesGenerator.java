@@ -3,14 +3,18 @@
  */
 package cl.ejemplo.entidades.generator;
 
+import cl.ejemplo.entidades.entidades.Atributo;
 import cl.ejemplo.entidades.entidades.Entidad;
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Iterables;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.generator.AbstractGenerator;
 import org.eclipse.xtext.generator.IFileSystemAccess2;
 import org.eclipse.xtext.generator.IGeneratorContext;
-import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
+import org.eclipse.xtext.xbase.lib.StringExtensions;
 
 /**
  * Generates code from your model files on save.
@@ -21,11 +25,109 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 public class EntidadesGenerator extends AbstractGenerator {
   @Override
   public void doGenerate(final Resource resource, final IFileSystemAccess2 fsa, final IGeneratorContext context) {
-    final Function1<Entidad, String> _function = (Entidad it) -> {
-      return it.getName();
-    };
-    String _join = IteratorExtensions.join(IteratorExtensions.<Entidad, String>map(Iterators.<Entidad>filter(resource.getAllContents(), Entidad.class), _function), ", ");
-    String _plus = ("People to greet: " + _join);
-    fsa.generateFile("greetings.txt", _plus);
+    Iterable<Entidad> _filter = Iterables.<Entidad>filter(IteratorExtensions.<EObject>toIterable(resource.getAllContents()), Entidad.class);
+    for (final Entidad e : _filter) {
+      String _name = e.getName();
+      String _plus = ("entidades/" + _name);
+      String _plus_1 = (_plus + ".java");
+      fsa.generateFile(_plus_1, this.compile(e));
+    }
+  }
+  
+  public CharSequence compile(final Entidad entidad) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("package entidades;");
+    _builder.newLine();
+    _builder.newLine();
+    _builder.append("public class ");
+    String _name = entidad.getName();
+    _builder.append(_name);
+    _builder.append(" ");
+    {
+      Entidad _superTipo = entidad.getSuperTipo();
+      boolean _tripleNotEquals = (_superTipo != null);
+      if (_tripleNotEquals) {
+        _builder.append(" extends ");
+        String _name_1 = entidad.getSuperTipo().getName();
+        _builder.append(_name_1);
+        _builder.append(" ");
+      }
+    }
+    _builder.append(" {");
+    _builder.newLineIfNotEmpty();
+    _builder.newLine();
+    {
+      EList<Atributo> _atributos = entidad.getAtributos();
+      for(final Atributo atributo : _atributos) {
+        _builder.append("\t");
+        _builder.append("private ");
+        String _name_2 = atributo.getTipo().getEntidad().getName();
+        _builder.append(_name_2, "\t");
+        _builder.append(" ");
+        String _name_3 = atributo.getName();
+        _builder.append(_name_3, "\t");
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+      }
+    }
+    _builder.append("\t");
+    _builder.newLine();
+    {
+      EList<Atributo> _atributos_1 = entidad.getAtributos();
+      for(final Atributo atributo_1 : _atributos_1) {
+        _builder.append("\t");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append("public ");
+        String _name_4 = atributo_1.getTipo().getEntidad().getName();
+        _builder.append(_name_4, "\t");
+        _builder.append(" get");
+        String _firstUpper = StringExtensions.toFirstUpper(atributo_1.getName());
+        _builder.append(_firstUpper, "\t");
+        _builder.append("(){");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("\t\t");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append("\t");
+        _builder.append("return ");
+        String _name_5 = atributo_1.getName();
+        _builder.append(_name_5, "\t\t");
+        _builder.append(";");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("}");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append("\t");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append("public void set");
+        String _firstUpper_1 = StringExtensions.toFirstUpper(atributo_1.getName());
+        _builder.append(_firstUpper_1, "\t");
+        _builder.append("(");
+        String _name_6 = atributo_1.getTipo().getEntidad().getName();
+        _builder.append(_name_6, "\t");
+        _builder.append(" _arg){");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("\t\t\t\t\t\t");
+        _builder.newLine();
+        _builder.append("\t");
+        _builder.append("\t");
+        _builder.append("this.");
+        String _name_7 = atributo_1.getName();
+        _builder.append(_name_7, "\t\t");
+        _builder.append(" = _arg;");
+        _builder.newLineIfNotEmpty();
+        _builder.append("\t");
+        _builder.append("}");
+        _builder.newLine();
+      }
+    }
+    _builder.append("}");
+    _builder.newLine();
+    return _builder;
   }
 }
